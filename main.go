@@ -7,12 +7,9 @@ import (
 	"github.com/zhangyiming748/SplitSrtByPunctuation/util"
 	"io"
 	"log/slog"
-	"math/rand"
 	"os"
 	"os/exec"
-	"strconv"
 	"strings"
-	"time"
 )
 
 /*
@@ -38,10 +35,10 @@ func main() {
 	}
 }
 func trans(srt string) {
-	seed := rand.New(rand.NewSource(time.Now().Unix()))
-	r := seed.Intn(2000)
+	//seed := rand.New(rand.NewSource(time.Now().Unix()))
+	//r := seed.Intn(2000)
 	//中间文件名
-	tmpname := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), strconv.Itoa(r), ".srt"}, "")
+	//tmpname := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), strconv.Itoa(r), ".srt"}, "")
 	before := util.ReadByLine(srt)
 	srts := []string{}
 	for i := 0; i < len(before); i += 4 {
@@ -61,10 +58,14 @@ func trans(srt string) {
 		//after.WriteString(fmt.Sprintf("%s\n", before[i+3]))
 		//after.Sync()
 	}
-	logic.Balance(srts)
-	origin := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), "_origin", ".srt"}, "")
-	exec.Command("cp", srt, origin).CombinedOutput()
-	os.Rename(tmpname, srt)
+	n := logic.Balance(srts)
+
+	for _, v := range n {
+		fmt.Println(v)
+	}
+	//origin := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), "_origin", ".srt"}, "")
+	//exec.Command("cp", srt, origin).CombinedOutput()
+	//os.Rename(tmpname, srt)
 
 }
 func setLog() {
