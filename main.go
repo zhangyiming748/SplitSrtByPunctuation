@@ -70,7 +70,7 @@ func trans(srt string) {
 		fmt.Println(v)
 	}
 	origin := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), "_origin", ".srt"}, "")
-	exec.Command("cp", srt, origin).CombinedOutput()
+	exec.Command("mv", srt, origin).CombinedOutput()
 	err := os.Rename(tmpname, srt)
 	if err != nil {
 		slog.Error("重命名出错")
