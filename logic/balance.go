@@ -18,15 +18,16 @@ func Balance(s []string) []string {
 			// 找下一句的标点符号
 			c := GetFirst(s[i+1])
 			first := fmt.Sprintf("%c", c)
-			perfix := strings.Split(s[i+1], first)[0]
-			s[i] = strings.Join([]string{s[i], " ", perfix, first}, "")
+			prefix := strings.Split(s[i+1], first)[0]
+			s[i] = strings.Join([]string{s[i], " ", prefix, first}, "")
 			s[i] = replace.ChinesePunctuation(s[i])
-			s[i+1] = strings.Replace(s[i+1], strings.Join([]string{perfix, first}, ""), "", 1)
+			s[i+1] = strings.Replace(s[i+1], strings.Join([]string{prefix, first}, ""), "", 1)
 			s[i+1] = replace.ChinesePunctuation(s[i+1])
+			// 如果第二行开头是空格 删掉这个空格
 			if strings.HasPrefix(s[i+1], " ") {
 				s[i+1] = s[i+1][1:]
 			}
-			slog.Debug("分割后", slog.String("前半部分", perfix), slog.String("组成完整的一句话", s[i]), slog.String("删除后的下一句话", s[i+1]))
+			slog.Debug("分割后", slog.String("前半部分", prefix), slog.String("组成完整的一句话", s[i]), slog.String("删除后的下一句话", s[i+1]))
 		}
 	}
 	return s
