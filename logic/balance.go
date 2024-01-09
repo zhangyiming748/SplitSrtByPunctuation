@@ -2,6 +2,7 @@ package logic
 
 import (
 	"fmt"
+	"github.com/zhangyiming748/SplitSrtByPunctuation/replace"
 	"log/slog"
 	"regexp"
 	"strings"
@@ -19,8 +20,13 @@ func Balance(s []string) []string {
 			first := fmt.Sprintf("%c", c)
 			perfix := strings.Split(s[i+1], first)[0]
 			s[i] = strings.Join([]string{s[i], perfix, first}, "")
+			s[i] = replace.ChinesePunctuation(s[i])
 			s[i+1] = strings.Replace(s[i+1], strings.Join([]string{perfix, first}, ""), "", 1)
-			slog.Debug("分割后", slog.String("前半部分", perfix), slog.String("组成完整的一句话", s[i]), slog.String("删除后的下一句话一句话", s[i+1]))
+			s[i+1] = replace.ChinesePunctuation(s[i+1])
+			if strings.HasPrefix(s[i+1], " ") {
+				s[i+1] = s[i+1][1:]
+			}
+			slog.Debug("分割后", slog.String("前半部分", perfix), slog.String("组成完整的一句话", s[i]), slog.String("删除后的下一句话", s[i+1]))
 		}
 	}
 	return s

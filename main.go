@@ -7,9 +7,12 @@ import (
 	"github.com/zhangyiming748/SplitSrtByPunctuation/util"
 	"io"
 	"log/slog"
+	"math/rand"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
+	"time"
 )
 
 /*
@@ -35,11 +38,12 @@ func main() {
 	}
 }
 func trans(srt string) {
-	//seed := rand.New(rand.NewSource(time.Now().Unix()))
-	//r := seed.Intn(2000)
+	seed := rand.New(rand.NewSource(time.Now().Unix()))
+	r := seed.Intn(2000)
 	//中间文件名
-	//tmpname := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), strconv.Itoa(r), ".srt"}, "")
+	tmpname := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), strconv.Itoa(r), ".srt"}, "")
 	before := util.ReadByLine(srt)
+	after, _ := os.OpenFile(tmpname, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0777)
 	srts := []string{}
 	for i := 0; i < len(before); i += 4 {
 		if i+3 > len(before) {
@@ -49,23 +53,28 @@ func trans(srt string) {
 		//after.WriteString(fmt.Sprintf("%s\n", before[i+1]))
 		src := before[i+2]
 		srts = append(srts, src)
-
-		//slog.Info("", slog.String("文件名", tmpname), slog.String("原文", src), slog.String("译文", dst))
-		//after.WriteString(fmt.Sprintf("%s\n", src))
-		//after.WriteString(fmt.Sprintf("%s\n", dst))
-		//fresh = append(fresh, dst)
-
-		//after.WriteString(fmt.Sprintf("%s\n", before[i+3]))
-		//after.Sync()
 	}
 	n := logic.Balance(srts)
-
+	count := 0
+	for j := 0; j < len(before); j += 4 {
+		if j+3 > len(before) {
+			continue
+		}
+		after.WriteString(fmt.Sprintf("%s\n", before[j]))
+		after.WriteString(fmt.Sprintf("%s\n", before[j+1]))
+		after.WriteString(fmt.Sprintf("%s\n", n[count]))
+		count++
+		after.WriteString(fmt.Sprintf("%s\n", before[j+3]))
+	}
 	for _, v := range n {
 		fmt.Println(v)
 	}
-	//origin := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), "_origin", ".srt"}, "")
-	//exec.Command("cp", srt, origin).CombinedOutput()
-	//os.Rename(tmpname, srt)
+	origin := strings.Join([]string{strings.Replace(srt, ".srt", "", 1), "_origin", ".srt"}, "")
+	exec.Command("cp", srt, origin).CombinedOutput()
+	err := os.Rename(tmpname, srt)
+	if err != nil {
+		slog.Error("重命名出错")
+	}
 
 }
 func setLog() {
