@@ -9,7 +9,7 @@ import (
 )
 
 func Balance(s []string) []string {
-	for i := 0; i < len(s); i++ {
+	for i := 0; i < len(s)-1; i++ {
 		//fmt.Println(s[i])
 		if strings.HasSuffix(s[i], ",") || strings.HasSuffix(s[i], ".") || strings.HasSuffix(s[i], "?") || strings.HasSuffix(s[i], "!") || strings.HasSuffix(s[i], "...") {
 			fmt.Printf("完整的句子:%s\n", s[i])
@@ -19,7 +19,7 @@ func Balance(s []string) []string {
 			c := GetFirst(s[i+1])
 			first := fmt.Sprintf("%c", c)
 			perfix := strings.Split(s[i+1], first)[0]
-			s[i] = strings.Join([]string{s[i], perfix, first}, "")
+			s[i] = strings.Join([]string{s[i], perfix, " ", first}, "")
 			s[i] = replace.ChinesePunctuation(s[i])
 			s[i+1] = strings.Replace(s[i+1], strings.Join([]string{perfix, first}, ""), "", 1)
 			s[i+1] = replace.ChinesePunctuation(s[i+1])

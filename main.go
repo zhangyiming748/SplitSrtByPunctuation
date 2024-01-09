@@ -28,7 +28,7 @@ func init() {
 var fresh []string
 
 func main() {
-	root := "/mnt/d/git/SplitSrtByPunctuation"
+	root := "/Users/zen/Github/useWhisper"
 	files := GetFileInfo.GetAllFileInfo(root, "srt")
 	for _, file := range files {
 		if strings.Contains(file.PurgeName, "origin") {
