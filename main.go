@@ -28,7 +28,7 @@ func init() {
 var fresh []string
 
 func main() {
-	root := "/Users/zen/Github/useWhisper"
+	root := "/mnt/f/Telegram/en"
 	files := GetFileInfo.GetAllFileInfo(root, "srt")
 	for _, file := range files {
 		if strings.Contains(file.PurgeName, "origin") {
